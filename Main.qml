@@ -7,15 +7,39 @@ Window {
     width: 640
     height: 480
     visible: true
+    visibility: "FullScreen"
     title: qsTr("Beverage Dispenser Interface")
 
+    Item {
+        id: watermark_container
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.topMargin: 10
+        anchors.leftMargin: 10
+        Text {
+            id: watermark
+            anchors.fill: parent
+            font.bold: true
+            font.pixelSize: 24
+            color: "grey"
+            text: qsTr("Biverage Dispenser Interface | Zadock")
+        }
+    }
+
     component CButton: AbstractButton {
+        id: btn
         property string color: "light grey"
 
         background: Rectangle {
             id: bg
             radius: mainWidg.radius * 0.6
-            color: parent.pressed ? "light grey" : parent.color
+            color: parent.pressed ? "grey" : parent.color
+            Text {
+                anchors.centerIn: parent
+                font.bold: true
+                font.pixelSize: 14
+                text: btn.text
+            }
         }
     }
 
@@ -25,6 +49,9 @@ Window {
     }
 
     component StationControl: Item {
+        id: stationControl
+        signal expand
+        signal collapse
         ColumnLayout {
             anchors.fill: parent
             anchors.leftMargin: 15
@@ -44,14 +71,22 @@ Window {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     color: "light green"
+                    text: qsTr("Start")
                 }
                 CButton {
                     Layout.fillHeight: true
                     Layout.preferredWidth: parent.width * 0.2
                 }
                 CButton {
+                    property bool expand: false
                     Layout.fillHeight: true
                     Layout.preferredWidth: parent.width * 0.2
+                    icon.name: "cut-edi"
+                    onClicked: {
+                        expand = !expand
+                        expand ? stationControl.expand(
+                                     ) : stationControl.collapse()
+                    }
                 }
             }
         }
@@ -65,6 +100,7 @@ Window {
         anchors.centerIn: parent
         border.width: 2
         border.color: "grey"
+        clip: true
         RowLayout {
             anchors.fill: parent
             spacing: 5
@@ -73,6 +109,14 @@ Window {
                 delegate: StationControl {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
+                    onExpand: Layout.minimumWidth = parent.width * 0.6
+                    onCollapse: Layout.minimumWidth = 0
+                    Behavior on Layout.minimumWidth {
+                        NumberAnimation {
+                            duration: 300
+                            easing.type: Easing.InOutSine
+                        }
+                    }
                 }
             }
         }

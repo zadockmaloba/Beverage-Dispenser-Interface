@@ -4,7 +4,19 @@ project(Beverage-Dispenser-Interface VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
+set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qmlmodules)
+
+list(APPEND MODULE_DIRS ${CMAKE_BINARY_DIR}/qmlmodules)
+
+set(QML_IMPORT_PATH ${MODULE_DIRS}
+    CACHE STRING "Qt Creator 4.1 extra qml import paths"
+    FORCE
+)
+
+find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Widgets Core)
+
+add_subdirectory(ext/NaiSys-DesktopUtils/LibNetwork/)
+add_subdirectory(ext/NaiSys-DesktopUtils/LibGui/)
 
 qt_standard_project_setup()
 
@@ -30,7 +42,9 @@ set_target_properties(appBeverage-Dispenser-Interface PROPERTIES
 )
 
 target_link_libraries(appBeverage-Dispenser-Interface
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Widgets
+    naisysguiplugin
+    naisysnetwork
 )
 
 include(GNUInstallDirs)

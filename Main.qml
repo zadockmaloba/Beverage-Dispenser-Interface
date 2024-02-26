@@ -2,10 +2,9 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Effects
+import libgui
 
 Window {
-    width: 640
-    height: 480
     visible: true
     visibility: "FullScreen"
     title: qsTr("Beverage Dispenser Interface")
@@ -23,6 +22,35 @@ Window {
             font.pixelSize: 24
             color: "grey"
             text: qsTr("Biverage Dispenser Interface | Zadock")
+        }
+    }
+
+    AbstractButton {
+        id: powerBtn
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 10
+        anchors.bottomMargin: 10
+        width: parent.width * 0.05
+        height: width
+        background: Rectangle {
+            anchors.fill: parent
+            radius: width * 0.5
+            border.width: 2
+            border.color: "grey"
+            color: parent.pressed ? "grey" : "white"
+            Image {
+                id: powerIcon
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectFit
+                source: "qrc:/dev.naisys.net/libgui/icons/power_icon.png"
+            }
+            MultiEffect {
+                source: powerIcon
+                anchors.fill: powerIcon
+                colorization: 1
+                colorizationColor: "grey"
+            }
         }
     }
 
@@ -50,6 +78,7 @@ Window {
 
     component StationControl: Item {
         id: stationControl
+        property string station_name
         signal expand
         signal collapse
         ColumnLayout {
@@ -58,10 +87,30 @@ Window {
             anchors.rightMargin: 15
             anchors.topMargin: 15
             anchors.bottomMargin: 15
-            LevelIndicator {
+
+            RowLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.minimumHeight: parent.height - 42
+                Layout.minimumWidth: parent.width * 0.4
+                LevelIndicator {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    //Layout.maximumWidth: configBtn.expand ? parent.width * 0.3 : parent.width
+                }
+                Item {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    visible: configBtn.expand
+                    NaiSysInputForm {
+                        anchors.fill: parent
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        anchors.topMargin: 5
+                        anchors.bottomMargin: 5
+                        form_title_text: stationControl.station_name
+                    }
+                }
             }
 
             RowLayout {
@@ -74,10 +123,7 @@ Window {
                     text: qsTr("Start")
                 }
                 CButton {
-                    Layout.fillHeight: true
-                    Layout.preferredWidth: parent.width * 0.2
-                }
-                CButton {
+                    id: configBtn
                     property bool expand: false
                     Layout.fillHeight: true
                     Layout.preferredWidth: parent.width * 0.2
@@ -111,6 +157,8 @@ Window {
                     Layout.fillWidth: true
                     onExpand: Layout.minimumWidth = parent.width * 0.6
                     onCollapse: Layout.minimumWidth = 0
+                    station_name: "Station " + (index + 1)
+                    //visible: width > 40
                     Behavior on Layout.minimumWidth {
                         NumberAnimation {
                             duration: 300
@@ -120,10 +168,5 @@ Window {
                 }
             }
         }
-    }
-
-    MultiEffect {
-        source: mainWidg
-        shadowEnabled: true
     }
 }

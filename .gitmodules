@@ -1,0 +1,3 @@
+[submodule "ext/NaiSys-DesktopUtils"]
+	path = ext/NaiSys-DesktopUtils
+	url = https://github.com/zadockmaloba/NaiSys-DesktopUtils

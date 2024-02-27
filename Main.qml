@@ -21,7 +21,7 @@ Window {
             font.bold: true
             font.pixelSize: 24
             color: "grey"
-            text: qsTr("Biverage Dispenser Interface | Zadock")
+            text: qsTr("Beverage Dispenser Interface | Zadock")
         }
     }
 

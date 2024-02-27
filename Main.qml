@@ -7,6 +7,8 @@ import libgui
 Window {
     visible: true
     visibility: "FullScreen"
+    width: 600
+    height: 450
     title: qsTr("Beverage Dispenser Interface")
 
     Item {
